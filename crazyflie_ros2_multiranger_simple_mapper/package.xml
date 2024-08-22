@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ros_gz_crazyflie_simple_mapper</name>
+  <name>crazyflie_ros2_multiranger_simple_mapper</name>
   <version>0.0.0</version>
   <description>Simple mapper example for the crazyflie gazebo simulation</description>
   <maintainer email="kimberly@bitcraze.io">Kimberly McGuire</maintainer>

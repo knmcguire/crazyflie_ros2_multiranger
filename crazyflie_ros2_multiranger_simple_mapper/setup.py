@@ -1,12 +1,11 @@
 from setuptools import find_packages, setup
 
-package_name = 'ros_gz_crazyflie_wall_following'
-submodule_name = 'ros_gz_crazyflie_wall_following/wall_following'
+package_name = 'crazyflie_ros2_multiranger_simple_mapper'
 
 setup(
     name=package_name,
     version='0.0.0',
-    packages=[package_name, submodule_name],
+    packages=find_packages(exclude=['test']),
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
@@ -16,11 +15,12 @@ setup(
     zip_safe=True,
     maintainer='Kimberly McGuire',
     maintainer_email='kimberly@bitcraze.io',
-    description='Wall following for Crazyflie using multiranger data',
+    description='Simple mapper for Crazyflie using odometry and multiranger data',
     license='MIT',
+    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'wall_following_multiranger = ros_gz_crazyflie_wall_following.wall_following_multiranger:main',
+            'simple_mapper_multiranger = crazyflie_ros2_multiranger_simple_mapper.simple_mapper_multiranger:main',
         ],
     },
 )
