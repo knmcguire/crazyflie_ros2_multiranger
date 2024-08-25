@@ -38,9 +38,9 @@ class WallFollowingMultiranger(Node):
         robot_prefix = self.get_parameter('robot_prefix').value
         self.declare_parameter('delay', 5.0)
         self.delay = self.get_parameter('delay').value
-        self.declare_parameter('max_turn_rate', 0.7)
+        self.declare_parameter('max_turn_rate', 0.5)
         max_turn_rate = self.get_parameter('max_turn_rate').value
-        self.declare_parameter('max_forward_speed', 0.3)
+        self.declare_parameter('max_forward_speed', 0.5)
         max_forward_speed = self.get_parameter('max_forward_speed').value
         self.declare_parameter('wall_following_direction', 'right')
         self.wall_following_direction = self.get_parameter('wall_following_direction').value
