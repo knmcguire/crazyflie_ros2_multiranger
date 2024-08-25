@@ -38,6 +38,12 @@ class WallFollowingMultiranger(Node):
         robot_prefix = self.get_parameter('robot_prefix').value
         self.declare_parameter('delay', 5.0)
         self.delay = self.get_parameter('delay').value
+        self.declare_parameter('max_turn_rate', 0.7)
+        max_turn_rate = self.get_parameter('max_turn_rate').value
+        self.declare_parameter('max_forward_speed', 0.3)
+        max_forward_speed = self.get_parameter('max_forward_speed').value
+        self.declare_parameter('wall_following_direction', 'right')
+        self.wall_following_direction = self.get_parameter('wall_following_direction').value
 
         self.odom_subscriber = self.create_subscription(
             Odometry, robot_prefix + '/odom', self.odom_subscribe_callback, 10)
@@ -57,11 +63,15 @@ class WallFollowingMultiranger(Node):
 
         self.get_logger().info(f"Wall following set for crazyflie " + robot_prefix +
                                f" using the scan topic")
+
+        # Create a timer to run the wall following state machine
         self.timer = self.create_timer(0.01, self.timer_callback)
 
+        # Initialize wall following state machine
         self.wall_following = WallFollowing(
-        angle_value_buffer=0.1, reference_distance_from_wall=0.5, max_turn_rate=0.7,
-        max_forward_speed=0.3, init_state=WallFollowing.StateWallFollowing.FORWARD)
+                max_turn_rate=max_turn_rate,
+                max_forward_speed=max_forward_speed,
+                init_state=WallFollowing.StateWallFollowing.FORWARD)
 
         # Give a take off command but wait for the delay to start the wall following
         self.wait_for_start = True
@@ -69,8 +79,6 @@ class WallFollowingMultiranger(Node):
         msg = Twist()
         msg.linear.z = 0.5
         self.twist_publisher.publish(msg)
-
-        time.sleep(1)
 
     def stop_wall_following_cb(self, request, response):
         self.get_logger().info('Stopping wall following')
@@ -109,16 +117,20 @@ class WallFollowingMultiranger(Node):
         #self.get_logger().info(f"Front range: {front_range}, Right range: {right_range}, Left range: {left_range}")
 
         # choose here the direction that you want the wall following to turn to
-        wall_following_direction = WallFollowing.WallFollowingDirection.RIGHT
-        side_range = left_range
+        if self.wall_following_direction == 'right':
+            wf_dir = WallFollowing.WallFollowingDirection.RIGHT
+            side_range = left_range
+        else:
+            wf_dir = WallFollowing.WallFollowingDirection.LEFT
+            side_range = right_range
 
         time_now = self.get_clock().now().nanoseconds * 1e-9
-
 
         # get velocity commands and current state from wall following state machine
         if side_range > 0.1:
             velocity_x, velocity_y, yaw_rate, state_wf = self.wall_following.wall_follower(
-                front_range, side_range, actual_yaw_rad, wall_following_direction, time_now)
+                front_range, side_range, actual_yaw_rad, wf_dir, time_now)
+
 
 
         msg = Twist()
@@ -126,10 +138,6 @@ class WallFollowingMultiranger(Node):
         msg.linear.y = velocity_y
         msg.angular.z = yaw_rate
         self.twist_publisher.publish(msg)
-
-        print('velocity_x', velocity_x, 'velocity_y', velocity_y,
-                'yaw_rate', yaw_rate, 'state_wf', state_wf)
-
 
     def odom_subscribe_callback(self, msg):
         self.position[0] = msg.pose.pose.position.x
