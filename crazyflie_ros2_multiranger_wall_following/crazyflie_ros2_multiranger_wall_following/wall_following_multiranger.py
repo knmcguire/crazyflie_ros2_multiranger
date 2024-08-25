@@ -17,6 +17,7 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import TransformStamped
 from geometry_msgs.msg import Twist
 from tf2_ros import StaticTransformBroadcaster
+from std_srvs.srv import Trigger
 
 import tf_transformations
 import math
@@ -36,12 +37,16 @@ class WallFollowingMultiranger(Node):
         self.declare_parameter('robot_prefix', '/crazyflie')
         robot_prefix = self.get_parameter('robot_prefix').value
         self.declare_parameter('delay', 5.0)
-        delay = self.get_parameter('delay').value
+        self.delay = self.get_parameter('delay').value
 
         self.odom_subscriber = self.create_subscription(
             Odometry, robot_prefix + '/odom', self.odom_subscribe_callback, 10)
         self.ranges_subscriber = self.create_subscription(
             LaserScan, robot_prefix + '/scan', self.scan_subscribe_callback, 10)
+
+        # add service to stop wall following and make the crazyflie land
+        self.srv = self.create_service(Trigger, robot_prefix + '/stop_wall_following', self.stop_wall_following_cb)
+
         self.position = [0.0, 0.0, 0.0]
         self.angles = [0.0, 0.0, 0.0]
         self.ranges = [0.0, 0.0, 0.0, 0.0]
@@ -55,8 +60,8 @@ class WallFollowingMultiranger(Node):
         self.timer = self.create_timer(0.01, self.timer_callback)
 
         self.wall_following = WallFollowing(
-        angle_value_buffer=0.1, reference_distance_from_wall=0.5,
-        max_forward_speed=0.2, init_state=WallFollowing.StateWallFollowing.FORWARD)
+        angle_value_buffer=0.1, reference_distance_from_wall=0.5, max_turn_rate=0.7,
+        max_forward_speed=0.3, init_state=WallFollowing.StateWallFollowing.FORWARD)
 
         # Give a take off command but wait for the delay to start the wall following
         self.wait_for_start = True
@@ -67,11 +72,22 @@ class WallFollowingMultiranger(Node):
 
         time.sleep(1)
 
+    def stop_wall_following_cb(self, request, response):
+        self.get_logger().info('Stopping wall following')
+        self.timer.cancel()
+        msg = Twist()
+        msg.linear.x = 0.0
+        msg.linear.y = 0.0
+        msg.linear.z = 0.0
+        msg.angular.z = 0.0
+        self.twist_publisher.publish(msg)
+        return response
+
     def timer_callback(self):
 
         # wait for the delay to pass and then start wall following
         if self.wait_for_start:
-            if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > delay:
+            if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > self.delay:
                 self.wait_for_start = False
             else:
                 return
@@ -90,7 +106,7 @@ class WallFollowingMultiranger(Node):
         front_range = self.ranges[2]
         left_range = self.ranges[3]
 
-        self.get_logger().info(f"Front range: {front_range}, Right range: {right_range}, Left range: {left_range}")
+        #self.get_logger().info(f"Front range: {front_range}, Right range: {right_range}, Left range: {left_range}")
 
         # choose here the direction that you want the wall following to turn to
         wall_following_direction = WallFollowing.WallFollowingDirection.RIGHT

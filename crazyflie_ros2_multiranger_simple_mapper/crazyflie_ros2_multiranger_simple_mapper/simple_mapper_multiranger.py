@@ -85,7 +85,7 @@ class SimpleMapperMultiranger(Node):
         if self.position_update is False:
             return
         for i in range(len(data)):
-            self.get_logger().info(f"Point {i} {data[i]}")
+            #self.get_logger().info(f"Point {i} {data[i]}")
             point_x = int((data[i][0] - GLOBAL_SIZE_X / 2.0) / MAP_RES)
             point_y = int((data[i][1] - GLOBAL_SIZE_Y / 2.0) / MAP_RES)
             points_x.append(point_x)
