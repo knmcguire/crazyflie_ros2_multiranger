@@ -75,7 +75,7 @@ Visualization Manager:
         All Enabled: true
         crazyflie/base_footprint:
           Value: true
-        crazyflie/odom:
+        odom:
           Value: true
         map:
           Value: true
@@ -86,7 +86,7 @@ Visualization Manager:
       Show Names: false
       Tree:
         map:
-          crazyflie/odom:
+          odom:
             crazyflie/base_footprint:
               {}
       Update Interval: 0
