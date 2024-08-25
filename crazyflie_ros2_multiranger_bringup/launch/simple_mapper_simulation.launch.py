@@ -30,6 +30,7 @@ def generate_launch_description():
         executable='simple_mapper_multiranger',
         name='simple_mapper',
         output='screen',
+        parameters=[{'robot_prefix': 'crazyflie'}]
     )
 
     return LaunchDescription([

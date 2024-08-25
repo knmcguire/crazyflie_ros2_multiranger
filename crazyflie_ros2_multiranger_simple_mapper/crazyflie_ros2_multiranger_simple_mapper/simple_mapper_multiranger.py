@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" This simple mapper is loosely based on both the bitcraze cflib point cloud example 
+""" This simple mapper is loosely based on both the bitcraze cflib point cloud example
  https://github.com/bitcraze/crazyflie-lib-python/blob/master/examples/multiranger/multiranger_pointcloud.py
  and the webots epuck simple mapper example:
  https://github.com/cyberbotics/webots_ros2
@@ -31,7 +31,7 @@ MAP_RES = 0.1
 class SimpleMapperMultiranger(Node):
     def __init__(self):
         super().__init__('simple_mapper_multiranger')
-        self.declare_parameter('robot_prefix', '/crazyflie_real')
+        self.declare_parameter('robot_prefix', '/crazyflie')
         robot_prefix = self.get_parameter('robot_prefix').value
 
         self.odom_subscriber = self.create_subscription(
@@ -47,7 +47,7 @@ class SimpleMapperMultiranger(Node):
         t_map = TransformStamped()
         t_map.header.stamp = self.get_clock().now().to_msg()
         t_map.header.frame_id = 'map'
-        t_map.child_frame_id = 'crazyflie_real/odom'
+        t_map.child_frame_id = robot_prefix + '/odom'
         t_map.transform.translation.x = 0.0
         t_map.transform.translation.y = 0.0
         t_map.transform.translation.z = 0.0
