@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" This simple mapper is loosely based on both the bitcraze cflib point cloud example 
+""" This simple mapper is loosely based on both the bitcraze cflib point cloud example
  https://github.com/bitcraze/crazyflie-lib-python/blob/master/examples/multiranger/multiranger_pointcloud.py
  and the webots epuck simple mapper example:
  https://github.com/cyberbotics/webots_ros2
@@ -31,9 +31,12 @@ MAP_RES = 0.1
 
 class WallFollowingMultiranger(Node):
     def __init__(self):
+
         super().__init__('simple_mapper_multiranger')
-        self.declare_parameter('robot_prefix', '/crazyflie_real')
+        self.declare_parameter('robot_prefix', '/crazyflie')
         robot_prefix = self.get_parameter('robot_prefix').value
+        self.declare_parameter('delay', 5.0)
+        delay = self.get_parameter('delay').value
 
         self.odom_subscriber = self.create_subscription(
             Odometry, robot_prefix + '/odom', self.odom_subscribe_callback, 10)
@@ -53,9 +56,26 @@ class WallFollowingMultiranger(Node):
 
         self.wall_following = WallFollowing(
         angle_value_buffer=0.1, reference_distance_from_wall=0.5,
-        max_forward_speed=0.3, init_state=WallFollowing.StateWallFollowing.FORWARD)
+        max_forward_speed=0.2, init_state=WallFollowing.StateWallFollowing.FORWARD)
+
+        # Give a take off command but wait for the delay to start the wall following
+        self.wait_for_start = True
+        self.start_clock = self.get_clock().now().nanoseconds * 1e-9
+        msg = Twist()
+        msg.linear.z = 0.5
+        self.twist_publisher.publish(msg)
+
+        time.sleep(1)
 
     def timer_callback(self):
+
+        # wait for the delay to pass and then start wall following
+        if self.wait_for_start:
+            if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > delay:
+                self.wait_for_start = False
+            else:
+                return
+
         # initialize variables
         velocity_x = 0.0
         velocity_y = 0.0
@@ -65,8 +85,7 @@ class WallFollowingMultiranger(Node):
         # Get Yaw
         actual_yaw_rad = self.angles[2]
 
-        # get front range in meters
-        back_range = self.ranges[0]
+        # get front and side range in meters
         right_range = self.ranges[1]
         front_range = self.ranges[2]
         left_range = self.ranges[3]
@@ -77,11 +96,14 @@ class WallFollowingMultiranger(Node):
         wall_following_direction = WallFollowing.WallFollowingDirection.RIGHT
         side_range = left_range
 
+        time_now = self.get_clock().now().nanoseconds * 1e-9
+
+
         # get velocity commands and current state from wall following state machine
         if side_range > 0.1:
             velocity_x, velocity_y, yaw_rate, state_wf = self.wall_following.wall_follower(
-                front_range, side_range, actual_yaw_rad, wall_following_direction, time.time())
-        
+                front_range, side_range, actual_yaw_rad, wall_following_direction, time_now)
+
 
         msg = Twist()
         msg.linear.x = velocity_x
