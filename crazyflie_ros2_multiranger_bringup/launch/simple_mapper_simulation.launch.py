@@ -30,10 +30,30 @@ def generate_launch_description():
         executable='simple_mapper_multiranger',
         name='simple_mapper',
         output='screen',
-        parameters=[{'robot_prefix': 'crazyflie'}]
+        parameters=[
+            {'robot_prefix': 'crazyflie'},
+            {'use_sim_time': True}
+        ]
     )
+
+    rviz_config_path = os.path.join(
+        get_package_share_directory('crazyflie_ros2_multiranger_bringup'),
+        'config',
+        'sim_mapping.rviz')
+
+    rviz = Node(
+            package='rviz2',
+            namespace='',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_path],
+            parameters=[{
+                "use_sim_time": True
+            }]
+            )
 
     return LaunchDescription([
         crazyflie_simulation,
-        simple_mapper
+        simple_mapper,
+        rviz
         ])
