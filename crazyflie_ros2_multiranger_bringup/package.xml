@@ -6,7 +6,8 @@
   <description>Launch and config files for the crazyflie_ros2_multiranger nodes</description>
   <maintainer email="kimberly@bitcraze.io">Kimberly McGuire</maintainer>
   <license>MIT</license>
+  <depend>ros_gz_crazyflie_bringup</depend>
   <export>
-    <build_type>ament_python</build_type>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
