@@ -86,9 +86,12 @@ class WallFollowingMultiranger(Node):
         msg = Twist()
         msg.linear.x = 0.0
         msg.linear.y = 0.0
-        msg.linear.z = 0.0
+        msg.linear.z = -0.2
         msg.angular.z = 0.0
         self.twist_publisher.publish(msg)
+
+        response.success = True
+
         return response
 
     def timer_callback(self):
