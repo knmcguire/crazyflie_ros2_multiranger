@@ -47,7 +47,7 @@ class SimpleMapperMultiranger(Node):
         t_map = TransformStamped()
         t_map.header.stamp = self.get_clock().now().to_msg()
         t_map.header.frame_id = 'map'
-        t_map.child_frame_id ='odom'
+        t_map.child_frame_id =robot_prefix +'/odom'
         t_map.transform.translation.x = 0.0
         t_map.transform.translation.y = 0.0
         t_map.transform.translation.z = 0.0

@@ -62,7 +62,7 @@ class WallFollowingMultiranger(Node):
         self.twist_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
         self.get_logger().info(f"Wall following set for crazyflie " + robot_prefix +
-                               f" using the scan topic")
+                               f" using the scan topic with a delay of {self.delay} seconds")
 
         # Create a timer to run the wall following state machine
         self.timer = self.create_timer(0.01, self.timer_callback)
@@ -96,6 +96,7 @@ class WallFollowingMultiranger(Node):
         # wait for the delay to pass and then start wall following
         if self.wait_for_start:
             if self.get_clock().now().nanoseconds * 1e-9 - self.start_clock > self.delay:
+                self.get_logger().info('Starting wall following')
                 self.wait_for_start = False
             else:
                 return
