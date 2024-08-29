@@ -1,28 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-#  ...........       ____  _ __
-#  |  ,-^-,  |      / __ )(_) /_______________ _____  ___
-#  | (  O  ) |     / __  / / __/ ___/ ___/ __ `/_  / / _ \
-#  | / ,..´  |    / /_/ / / /_/ /__/ /  / /_/ / / /_/  __/
-#     +.......   /_____/_/\__/\___/_/   \__,_/ /___/\___/
-#
-#  GNU general public license v3.0
-#
-#  Copyright (C) 2023 Bitcraze AB
-#
-#  Crazyflie Python Library
-#
-#  This program is free software; you can redistribute it and/or
-#  modify it under the terms of the GNU General Public License
-#  as published by the Free Software Foundation; either version 2
-#  of the License, or (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-# You should have received a copy of the GNU General Public License
-# along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 file: wall_following.py
 
@@ -53,7 +28,7 @@ class WallFollowing():
         LEFT = 1
         RIGHT = -1
 
-    def __init__(self, reference_distance_from_wall=0.0,
+    def __init__(self, reference_distance_from_wall=0.5,
                  max_forward_speed=0.2,
                  max_turn_rate=0.5,
                  wall_following_direction=WallFollowingDirection.LEFT,
