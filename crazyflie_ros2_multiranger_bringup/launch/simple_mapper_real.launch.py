@@ -48,7 +48,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             {'robot_prefix': 'crazyflie_real'},
-            {'use_sim_time': True}
+            {'use_sim_time': False}
         ]
     )
 
@@ -64,7 +64,7 @@ def generate_launch_description():
             name='rviz2',
             arguments=['-d', rviz_config_path],
             parameters=[{
-                "use_sim_time": True
+                "use_sim_time": False
             }]
             )
 
