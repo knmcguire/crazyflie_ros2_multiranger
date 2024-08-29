@@ -18,13 +18,8 @@ git clone https://github.com/IMRCLab/crazyswarm2 --recursive -b odom-tf-fix
 
 There is a fix that needs to be merged so it's best to use the odom-tf-fix. For the rest make sure to [install all of Crazyswarm2's dependencies](https://imrclab.github.io/crazyswarm2/installation.html) but skip buildin
 
-In the same workspace install the crazyflie gazebo ROS 2 package:
-```bash
-cd ~/ros2_ws/src
-git clone https://github.com/knmcguire/ros_gz_crazyflie -b fix-with-multiranger
-```
-
-Follow the rest of the usage instructions in [the README of the ros_gz_crazyflie repository](https://github.com/knmcguire/ros_gz_crazyflie?tab=readme-ov-file#usage) for sourcing the specific Crazyflie model.
+In the same workspace also install the ros_gz_crazyflie usage instructions in [the README of the ros_gz_crazyflie repository](https://github.com/knmcguire/ros_gz_crazyflie?tab=readme-ov-file#usage) for sourcing the specific Crazyflie model.
+> Make sure to switch to the gazebo-multiranger branch when cloning the [crazyflie-simulation](https://github.com/bitcraze/crazyflie-simulation) repo!
 
 Then build the workspace:
 ```bash
@@ -42,7 +37,7 @@ source ~/ros2_ws/install/setup.bash
 
 Also the simulation model needs to be sourced in every terminal where you run the simulation with:
 ```bash
-export GZ_SIM_RESOURCE_PATH=~/simulation_models/simulator_files/gazebo/"
+export GZ_SIM_RESOURCE_PATH=~/simulation_models/crazyflie_simulation/simulator_files/gazebo/"
 ```
 
 The latter is depended on where you have the simulation models stored.
