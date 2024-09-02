@@ -13,7 +13,7 @@ git clone git@github.com:knmcguire/crazyflie_ros2_multiranger.git
 In the same workspace, git clone Crazyswarm2:
 ```bash
 
-git clone https://github.com/IMRCLab/crazyswarm2 --recursive -b odom-tf-fix
+git clone https://github.com/IMRCLab/crazyswarm2 --recursive
 ```
 
 There is a fix that needs to be merged so it's best to use the odom-tf-fix. For the rest make sure to [install all of Crazyswarm2's dependencies](https://imrclab.github.io/crazyswarm2/installation.html) but skip buildin
