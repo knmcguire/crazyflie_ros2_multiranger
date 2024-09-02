@@ -43,6 +43,8 @@ export GZ_SIM_RESOURCE_PATH=/home/user/simulation_models/crazyflie_simulation/si
 
 The latter is depended on where you have the simulation models stored.
 
+> You might need to enter the full path for sourcing, so with `/home/USER/...` if you get a 'file not found' error.
+
 ### Simulated Crazyflie with simple mapper and teleop
 
 To run the simulation with the simple mapper while controlling in with teleop run:
