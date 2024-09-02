@@ -37,8 +37,9 @@ source ~/ros2_ws/install/setup.bash
 
 Also the simulation model needs to be sourced in every terminal where you run the simulation with:
 ```bash
-export GZ_SIM_RESOURCE_PATH=~/simulation_models/crazyflie_simulation/simulator_files/gazebo/"
+export GZ_SIM_RESOURCE_PATH=/home/user/simulation_models/crazyflie_simulation/simulator_files/gazebo/"
 ```
+> Note that the full directory should be sourced as tilde won't be recognized.
 
 The latter is depended on where you have the simulation models stored.
 
