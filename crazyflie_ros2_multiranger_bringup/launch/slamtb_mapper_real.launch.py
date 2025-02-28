@@ -26,7 +26,7 @@ def generate_launch_description():
     # Start up a crazyflie server through the Crazyswarm2 project
     crazyflie_real = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([os.path.join(pkg_project_crazyswarm2, 'launch'), '/launch.py']),
-        launch_arguments={'crazyflies_yaml_file': crazyflies_yaml, 'backend': 'cflib', 'mocap': 'False', 'rviz': 'False', 'teleop': 'False', 'gui': 'False'}.items()
+        launch_arguments={'crazyflies_yaml_file': crazyflies_yaml, 'backend': 'cflib', 'mocap': 'False', 'rviz': 'False', 'teleop': 'False'}.items()
     )
 
     # Start a velocity multiplexer node for the crazyflie
@@ -67,10 +67,21 @@ def generate_launch_description():
                 "use_sim_time": False
             }]
             )
+    
+    slam_toolbox = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(get_package_share_directory('slam_toolbox'), 'launch/online_async_launch.py')),
+            launch_arguments={
+                'slam_params_file': os.path.join(get_package_share_directory('crazyflie_examples'), 'config/slam_params.yaml'),
+                'use_sim_time': 'False',
+            }.items())
+
+
 
     return LaunchDescription([
         crazyflie_real,
         simple_mapper,
-        #crazyflie_vel_mux,
-        #rviz
+        crazyflie_vel_mux,
+        slam_toolbox,
+        rviz
         ])
